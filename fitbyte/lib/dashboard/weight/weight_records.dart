@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import '../dashboard_controller.dart';
 
 class WeightRecordsPage extends StatelessWidget {
+  const WeightRecordsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<DashboardController>();

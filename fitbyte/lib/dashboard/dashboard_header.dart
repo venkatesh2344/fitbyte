@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DashboardHeader extends StatelessWidget {
+  const DashboardHeader({super.key});
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<DashboardController>();
@@ -36,7 +38,7 @@ class DashboardHeader extends StatelessWidget {
               onLongPress: () {
                 print("pressed");
                 Get.dialog(
-                  Container(height: 50, width: 50, child: Text("Logout")),
+                  SizedBox(height: 50, width: 50, child: Text("Logout")),
                 );
               },
               child: CircleAvatar(

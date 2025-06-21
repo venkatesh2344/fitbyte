@@ -1,3 +1,8 @@
+import 'package:fitbyte/dashboard/calculation/calculation_controller.dart';
+import 'package:fitbyte/dashboard/dashboard_controller.dart';
+import 'package:fitbyte/theme/themecontroller.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:flutter/foundation.dart'; // For debugPrint
@@ -193,6 +198,13 @@ class DatabaseHelper {
         await txn.delete('user_settings');
         await txn.delete('weight_records');
       });
+      // Step 3: Reset GetX controllers
+Get.delete<CalculatorController>(force: true);
+Get.delete<DashboardController>(force: true);
+Get.delete<ThemeController>(force: true);
+Get.put(CalculatorController());
+Get.put(DashboardController());
+Get.put(ThemeController());
       debugPrint('All data cleared successfully');
     } catch (e) {
       debugPrint('Error clearing data: $e');

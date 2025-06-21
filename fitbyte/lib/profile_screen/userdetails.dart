@@ -26,34 +26,57 @@ class _UserDetailsCardState extends State<UserDetailsCard> {
   String? _activityLevel = 'sedentary';
   double _height = 1.75;
 
+  // Store the ever listener subscription to clean it up in dispose
+  late final Worker _userSettingsListener;
+
   @override
   void initState() {
     super.initState();
     final controller = Get.find<DashboardController>();
-    _nameController.text = controller.userSettings['name']?.toString() ?? '';
-    _nicknameController.text = controller.userSettings['nickname']?.toString() ?? '';
-    _phoneController.text = controller.userSettings['phone']?.toString() ?? '';
-    _ageController.text = controller.userSettings['age']?.toString() ?? '';
-    // Normalize gender to lowercase and validate
-    final storedGender = controller.userSettings['gender']?.toString().toLowerCase();
+    _updateFormFields(controller.userSettings); // Initial setup
+
+    // Listen for changes in userSettings
+    _userSettingsListener = ever(controller.userSettings, (Map<dynamic, dynamic> settings) {
+      if (!_isEditing && mounted) { // Check mounted to avoid setState after dispose
+        setState(() {
+          _updateFormFields(settings);
+        });
+      }
+    });
+
+    // Fetch settings on initialization (remove if called elsewhere)
+    controller.fetchUserSettings();
+  }
+
+  void _updateFormFields(Map<dynamic, dynamic> settings) {
+    _nameController.text = settings['name']?.toString() ?? '';
+    _nicknameController.text = settings['nickname']?.toString() ?? '';
+    _phoneController.text = settings['phone']?.toString() ?? '';
+    _ageController.text = settings['age']?.toString() ?? '';
+    final storedGender = settings['gender']?.toString().toLowerCase();
     _gender = ['male', 'female', 'other'].contains(storedGender) ? storedGender! : 'male';
-    _height = (controller.userSettings['height'] as num?)?.toDouble() ?? 1.75;
-    _heightUnit = controller.userSettings['height_unit']?.toString() ?? 'cm';
-    _activityLevel = controller.userSettings['activity_level']?.toString() ?? 'sedentary';
+    _height = (settings['height'] as num?)?.toDouble() ?? 1.75;
+    _heightUnit = settings['height_unit']?.toString() ?? 'cm';
+    _activityLevel = settings['activity_level']?.toString() ?? 'sedentary';
     if (_heightUnit == 'cm') {
       _heightCmController.text = (_height * 100).round().toString();
+      _heightFtController.clear();
+      _heightInController.clear();
     } else {
       final feet = (_height * 3.28084).floor();
       final inches = ((_height * 39.3701) % 12).round();
       _heightFtController.text = feet.toString();
       _heightInController.text = inches.toString();
+      _heightCmController.clear();
     }
-    // Debug print to check initial gender
-    print('Initial gender: $_gender, userSettings[gender]: ${controller.userSettings['gender']}');
+    print('Updated form fields: name=${_nameController.text}, gender=$_gender, height=$_height');
   }
 
   @override
   void dispose() {
+    // Clean up the ever listener
+    _userSettingsListener.dispose();
+    // Dispose controllers
     _nameController.dispose();
     _nicknameController.dispose();
     _phoneController.dispose();
@@ -79,7 +102,6 @@ class _UserDetailsCardState extends State<UserDetailsCard> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Obx(() {
-            final userSettings = controller.userSettings;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -101,31 +123,14 @@ class _UserDetailsCardState extends State<UserDetailsCard> {
                         color: themeController.theme.primaryColor,
                       ),
                       onPressed: () {
-                        setState(() {
-                          if (_isEditing) {
-                            _nameController.text = userSettings['name']?.toString() ?? '';
-                            _nicknameController.text = userSettings['nickname']?.toString() ?? '';
-                            _phoneController.text = userSettings['phone']?.toString() ?? '';
-                            _ageController.text = userSettings['age']?.toString() ?? '';
-                            final storedGender = userSettings['gender']?.toString().toLowerCase();
-                            _gender = ['male', 'female', 'other'].contains(storedGender) ? storedGender! : 'male';
-                            _height = (userSettings['height'] as num?)?.toDouble() ?? 1.75;
-                            _heightUnit = userSettings['height_unit']?.toString() ?? 'cm';
-                            _activityLevel = userSettings['activity_level']?.toString() ?? 'sedentary';
-                            if (_heightUnit == 'cm') {
-                              _heightCmController.text = (_height * 100).round().toString();
-                              _heightFtController.clear();
-                              _heightInController.clear();
-                            } else {
-                              final feet = (_height * 3.28084).floor();
-                              final inches = ((_height * 39.3701) % 12).round();
-                              _heightFtController.text = feet.toString();
-                              _heightInController.text = inches.toString();
-                              _heightCmController.clear();
+                        if (mounted) {
+                          setState(() {
+                            if (_isEditing) {
+                              _updateFormFields(controller.userSettings);
                             }
-                          }
-                          _isEditing = !_isEditing;
-                        });
+                            _isEditing = !_isEditing;
+                          });
+                        }
                       },
                     ),
                   ],
@@ -134,34 +139,34 @@ class _UserDetailsCardState extends State<UserDetailsCard> {
                 if (!_isEditing) ...[
                   _buildDetailRow(
                     label: 'Name',
-                    value: userSettings['name']?.toString() ?? 'Not set',
+                    value: controller.userSettings['name']?.toString() ?? 'Not set',
                     icon: Icons.person,
                   ),
                   _buildDetailRow(
                     label: 'Nickname',
-                    value: userSettings['nickname']?.toString() ?? 'Not set',
+                    value: controller.userSettings['nickname']?.toString() ?? 'Not set',
                     icon: Icons.badge,
                   ),
                   _buildDetailRow(
                     label: 'Phone',
-                    value: userSettings['phone']?.toString() ?? 'Not set',
+                    value: controller.userSettings['phone']?.toString() ?? 'Not set',
                     icon: Icons.phone,
                   ),
                   _buildDetailRow(
                     label: 'Age',
-                    value: userSettings['age'] != null ? '${userSettings['age']} years' : 'Not set',
+                    value: controller.userSettings['age'] != null ? '${controller.userSettings['age']} years' : 'Not set',
                     icon: Icons.cake,
                   ),
                   _buildDetailRow(
                     label: 'Gender',
-                    value: userSettings['gender']?.toString() ?? 'Not set',
+                    value: controller.userSettings['gender']?.toString() ?? 'Not set',
                     icon: Icons.person_outline,
                   ),
                   _buildDetailRow(
                     label: 'Height',
                     value: _formatHeight(
-                      (userSettings['height'] as num?)?.toDouble(),
-                      userSettings['height_unit']?.toString(),
+                      (controller.userSettings['height'] as num?)?.toDouble(),
+                      controller.userSettings['height_unit']?.toString(),
                     ),
                     icon: Icons.height,
                   ),
@@ -173,7 +178,7 @@ class _UserDetailsCardState extends State<UserDetailsCard> {
                   const SizedBox(height: 8),
                   ChoiceChip(
                     label: Text(
-                      (userSettings['activity_level']?.toString() ?? 'sedentary').replaceAll('_', ' '),
+                      (controller.userSettings['activity_level']?.toString() ?? 'sedentary').replaceAll('_', ' '),
                     ),
                     selected: true,
                     selectedColor: themeController.theme.primaryColor,
@@ -233,7 +238,7 @@ class _UserDetailsCardState extends State<UserDetailsCard> {
                                   ))
                               .toList(),
                           onChanged: (value) {
-                            if (value != null) {
+                            if (value != null && mounted) {
                               setState(() {
                                 _gender = value;
                                 print('Gender changed to: $value');
@@ -274,7 +279,7 @@ class _UserDetailsCardState extends State<UserDetailsCard> {
                                   ))
                               .toList(),
                           onChanged: (value) {
-                            if (value != null) {
+                            if (value != null && mounted) {
                               setState(() {
                                 _heightUnit = value;
                                 if (value == 'cm') {
@@ -393,7 +398,7 @@ class _UserDetailsCardState extends State<UserDetailsCard> {
                                 child: Text(level.replaceAll('_', ' ')),
                               )).toList(),
                           onChanged: (value) {
-                            if (value != null) {
+                            if (value != null && mounted) {
                               setState(() => _activityLevel = value);
                             }
                           },
@@ -405,29 +410,12 @@ class _UserDetailsCardState extends State<UserDetailsCard> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                setState(() {
-                                  _isEditing = false;
-                                  _nameController.text = userSettings['name']?.toString() ?? '';
-                                  _nicknameController.text = userSettings['nickname']?.toString() ?? '';
-                                  _phoneController.text = userSettings['phone']?.toString() ?? '';
-                                  _ageController.text = userSettings['age']?.toString() ?? '';
-                                  final storedGender = userSettings['gender']?.toString().toLowerCase();
-                                  _gender = ['male', 'female', 'other'].contains(storedGender) ? storedGender! : 'male';
-                                  _height = (userSettings['height'] as num?)?.toDouble() ?? 1.75;
-                                  _heightUnit = userSettings['height_unit']?.toString() ?? 'cm';
-                                  _activityLevel = userSettings['activity_level']?.toString() ?? 'sedentary';
-                                  if (_heightUnit == 'cm') {
-                                    _heightCmController.text = (_height * 100).round().toString();
-                                    _heightFtController.clear();
-                                    _heightInController.clear();
-                                  } else {
-                                    final feet = (_height * 3.28084).floor();
-                                    final inches = ((_height * 39.3701) % 12).round();
-                                    _heightFtController.text = feet.toString();
-                                    _heightInController.text = inches.toString();
-                                    _heightCmController.clear();
-                                  }
-                                });
+                                if (mounted) {
+                                  setState(() {
+                                    _isEditing = false;
+                                    _updateFormFields(controller.userSettings);
+                                  });
+                                }
                               },
                               child: const Text('Cancel', style: TextStyle(fontSize: 16, color: Colors.grey)),
                             ),
@@ -450,7 +438,7 @@ class _UserDetailsCardState extends State<UserDetailsCard> {
                                     controller.userSettings.assignAll({
                                       'name': _nameController.text.trim(),
                                       'phone': _phoneController.text.trim(),
-                                      'nickname': _nicknameController.text.trim(),
+                                      'nickname': _nameController.text.trim(),
                                       'age': age,
                                       'gender': _gender,
                                       'height': _height,
@@ -467,7 +455,9 @@ class _UserDetailsCardState extends State<UserDetailsCard> {
                                       calcController.updateInches(_heightInController.text.trim());
                                     }
                                     calcController.calculate();
-                                    setState(() => _isEditing = false);
+                                    if (mounted) {
+                                      setState(() => _isEditing = false);
+                                    }
                                     Get.snackbar(
                                       'Profile Updated!',
                                       'Your stats are ready to roll!',

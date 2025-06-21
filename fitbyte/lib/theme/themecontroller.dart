@@ -23,7 +23,7 @@ class ThemeController extends GetxController {
         colorScheme: ColorScheme.fromSwatch().copyWith(
           primary: gender.value == 'female' ? Colors.pink[100] : Colors.blue[100],
           secondary: gender.value == 'female' ? Colors.pink[200] : Colors.blue[200],
-          background: Colors.white,
+          surface: Colors.white,
         ),
         scaffoldBackgroundColor: Colors.white,
         textTheme: const TextTheme(

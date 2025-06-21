@@ -7,7 +7,7 @@ import 'package:fitbyte/dashboard/dashboard.dart';
 
 class OnboardingScreen extends StatefulWidget {
   final Map<String, dynamic>? initialSettings;
-  OnboardingScreen({this.initialSettings});
+  const OnboardingScreen({super.key, this.initialSettings});
 
   @override
   _OnboardingScreenState createState() => _OnboardingScreenState();

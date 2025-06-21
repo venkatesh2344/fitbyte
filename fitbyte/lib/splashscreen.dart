@@ -5,6 +5,8 @@ import 'package:fitbyte/utils/database_helper.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
+
   Future<Widget> _checkUserSettings() async {
     try {
       final dbHelper = DatabaseHelper.instance;

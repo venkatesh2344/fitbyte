@@ -1,11 +1,8 @@
-import 'package:fitbyte/Landing%20Page/landing_page.dart';
 import 'package:fitbyte/dashboard/calculation/calculation_controller.dart';
 import 'package:fitbyte/dashboard/dashboard_controller.dart';
-import 'package:fitbyte/onboarding/onboarding.dart';
 import 'package:fitbyte/splashscreen.dart';
 import 'package:fitbyte/theme/themecontroller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:fitbyte/utils/database_helper.dart';
 

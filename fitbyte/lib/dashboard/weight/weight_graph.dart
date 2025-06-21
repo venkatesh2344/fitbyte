@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 class WeightGraph extends StatelessWidget {
   final List<Map<String, dynamic>> records;
 
-  const WeightGraph({required this.records});
+  const WeightGraph({super.key, required this.records});
 
   @override
   Widget build(BuildContext context) {

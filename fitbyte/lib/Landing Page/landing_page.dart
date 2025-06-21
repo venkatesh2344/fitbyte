@@ -2,7 +2,6 @@ import 'package:fitbyte/Landing%20Page/landing_controller.dart';
 import 'package:fitbyte/onboarding/onboarding.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class LandingPage extends StatelessWidget {
   LandingPage({super.key});
