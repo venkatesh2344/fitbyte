@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fitbyte/profile_screen/profile_screen.dart';
 
-class CaloriesCalculatorCard extends StatelessWidget {
+class CaloriesCalculatorCard extends StatefulWidget {
   const CaloriesCalculatorCard({super.key});
 
+  @override
+  State<CaloriesCalculatorCard> createState() => _CaloriesCalculatorCardState();
+}
+
+class _CaloriesCalculatorCardState extends State<CaloriesCalculatorCard> {
   @override
   Widget build(BuildContext context) {
     final CalculatorController controller = Get.find<CalculatorController>();
@@ -16,7 +21,9 @@ class CaloriesCalculatorCard extends StatelessWidget {
       return IntrinsicHeight(
         child: Card(
           elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(32.0, 16.0, 32.0, 16.0),
             child: Column(
@@ -24,15 +31,20 @@ class CaloriesCalculatorCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.local_fire_department, color: themeController.theme.primaryColor, size: 24),
+                    Icon(
+                      Icons.local_fire_department,
+                      color: themeController.theme.primaryColor,
+                      size: 24,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       'Calorie Calculator',
-                      style: themeController.theme.textTheme.titleMedium?.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
+                      style: themeController.theme.textTheme.titleMedium
+                          ?.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
                     ),
                   ],
                 ),
@@ -40,13 +52,21 @@ class CaloriesCalculatorCard extends StatelessWidget {
                 if (controller.calories.value > 0) ...[
                   Text(
                     'Your daily calorie needs: ${controller.calories.value.toStringAsFixed(0)} kcal',
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Based on your ${controller.activityLevel.value.replaceAll('_', ' ')} activity',
-                    style: const TextStyle(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w500,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
@@ -62,7 +82,11 @@ class CaloriesCalculatorCard extends StatelessWidget {
                 ] else ...[
                   Text(
                     'Calculate your calorie needs!',
-                    style: const TextStyle(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w500,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
@@ -79,30 +103,74 @@ class CaloriesCalculatorCard extends StatelessWidget {
                 const SizedBox(height: 16),
                 Center(
                   child: ElevatedButton(
-                    onPressed: () => _showInputDialog(context, controller, themeController),
+                    onPressed: () {
+                      if (controller.weight.value == 0) {
+                        showDialog(
+                          context: Get.context!,
+                          builder:
+                              (context) => AlertDialog(
+                                title: const Text('Error'),
+                                content: const Text(
+                                  'Please enter your weight first',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                        );
+                        return;
+                      }
+                      _showInputDialog(context, controller, themeController);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: themeController.theme.primaryColor,
                       foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                     child: const Text('Calculate Calories for otheres'),
                   ),
                 ),
-                  const SizedBox(height: 8),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () => Get.to(() => const ProfileScreen()),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: themeController.theme.primaryColor
-                            .withOpacity(0.8),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                const SizedBox(height: 8),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (controller.weight.value == 0) {
+                        showDialog(
+                          context: Get.context!,
+                          builder:
+                              (context) => AlertDialog(
+                                title: const Text('Error'),
+                                content: const Text(
+                                  'Please enter your weight first',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                        );
+                        return;
+                      }
+                      Get.to(() => const ProfileScreen());
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: themeController.theme.primaryColor
+                          .withOpacity(0.8),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Text('Know Your Calories'),
                     ),
+                    child: const Text('Know Your Calories'),
                   ),
+                ),
               ],
             ),
           ),
@@ -111,7 +179,11 @@ class CaloriesCalculatorCard extends StatelessWidget {
     });
   }
 
-  void _showInputDialog(BuildContext context, CalculatorController controller, ThemeController themeController) {
+  void _showInputDialog(
+    BuildContext context,
+    CalculatorController controller,
+    ThemeController themeController,
+  ) {
     final TextEditingController weightController = TextEditingController();
     final TextEditingController heightCmController = TextEditingController();
     final TextEditingController feetController = TextEditingController();
@@ -140,11 +212,19 @@ class CaloriesCalculatorCard extends StatelessWidget {
                           decoration: InputDecoration(
                             labelText: 'Weight (kg)',
                             border: const OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.fitness_center, color: themeController.theme.primaryColor),
-                            errorText: weightController.text.isNotEmpty &&
-                                    (double.tryParse(weightController.text) ?? 0.0) <= 0
-                                ? 'Enter a valid weight'
-                                : null,
+                            prefixIcon: Icon(
+                              Icons.fitness_center,
+                              color: themeController.theme.primaryColor,
+                            ),
+                            errorText:
+                                weightController.text.isNotEmpty &&
+                                        (double.tryParse(
+                                                  weightController.text,
+                                                ) ??
+                                                0.0) <=
+                                            0
+                                    ? 'Enter a valid weight'
+                                    : null,
                           ),
                           keyboardType: TextInputType.number,
                           onChanged: controller.updateWeight,
@@ -155,14 +235,22 @@ class CaloriesCalculatorCard extends StatelessWidget {
                           decoration: InputDecoration(
                             labelText: 'Height Unit',
                             border: const OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.height, color: themeController.theme.primaryColor),
+                            prefixIcon: Icon(
+                              Icons.height,
+                              color: themeController.theme.primaryColor,
+                            ),
                           ),
-                          items: ['cm', 'ft/in'].map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value == 'cm' ? 'Centimeters' : 'Feet/Inches'),
-                            );
-                          }).toList(),
+                          items:
+                              ['cm', 'ft/in'].map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value == 'cm'
+                                        ? 'Centimeters'
+                                        : 'Feet/Inches',
+                                  ),
+                                );
+                              }).toList(),
                           onChanged: controller.updateHeightUnit,
                         ),
                         const SizedBox(height: 8),
@@ -172,11 +260,19 @@ class CaloriesCalculatorCard extends StatelessWidget {
                             decoration: InputDecoration(
                               labelText: 'Height (cm)',
                               border: const OutlineInputBorder(),
-                              prefixIcon: Icon(Icons.height, color: themeController.theme.primaryColor),
-                              errorText: heightCmController.text.isNotEmpty &&
-                                      (double.tryParse(heightCmController.text) ?? 0.0) <= 0
-                                  ? 'Enter a valid height'
-                                  : null,
+                              prefixIcon: Icon(
+                                Icons.height,
+                                color: themeController.theme.primaryColor,
+                              ),
+                              errorText:
+                                  heightCmController.text.isNotEmpty &&
+                                          (double.tryParse(
+                                                    heightCmController.text,
+                                                  ) ??
+                                                  0.0) <=
+                                              0
+                                      ? 'Enter a valid height'
+                                      : null,
                             ),
                             keyboardType: TextInputType.number,
                             onChanged: controller.updateHeight,
@@ -190,11 +286,19 @@ class CaloriesCalculatorCard extends StatelessWidget {
                                   decoration: InputDecoration(
                                     labelText: 'Feet',
                                     border: const OutlineInputBorder(),
-                                    prefixIcon: Icon(Icons.height, color: themeController.theme.primaryColor),
-                                    errorText: feetController.text.isNotEmpty &&
-                                            (int.tryParse(feetController.text) ?? 0) <= 0
-                                        ? 'Enter valid feet'
-                                        : null,
+                                    prefixIcon: Icon(
+                                      Icons.height,
+                                      color: themeController.theme.primaryColor,
+                                    ),
+                                    errorText:
+                                        feetController.text.isNotEmpty &&
+                                                (int.tryParse(
+                                                          feetController.text,
+                                                        ) ??
+                                                        0) <=
+                                                    0
+                                            ? 'Enter valid feet'
+                                            : null,
                                   ),
                                   keyboardType: TextInputType.number,
                                   onChanged: controller.updateFeet,
@@ -207,11 +311,19 @@ class CaloriesCalculatorCard extends StatelessWidget {
                                   decoration: InputDecoration(
                                     labelText: 'Inches',
                                     border: const OutlineInputBorder(),
-                                    prefixIcon: Icon(Icons.height, color: themeController.theme.primaryColor),
-                                    errorText: inchesController.text.isNotEmpty &&
-                                            (double.tryParse(inchesController.text) ?? 0.0) < 0
-                                        ? 'Enter valid inches'
-                                        : null,
+                                    prefixIcon: Icon(
+                                      Icons.height,
+                                      color: themeController.theme.primaryColor,
+                                    ),
+                                    errorText:
+                                        inchesController.text.isNotEmpty &&
+                                                (double.tryParse(
+                                                          inchesController.text,
+                                                        ) ??
+                                                        0.0) <
+                                                    0
+                                            ? 'Enter valid inches'
+                                            : null,
                                   ),
                                   keyboardType: TextInputType.number,
                                   onChanged: controller.updateInches,
@@ -219,21 +331,24 @@ class CaloriesCalculatorCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                       
                       ] else ...[
-                         DropdownButtonFormField<String>(
+                        DropdownButtonFormField<String>(
                           value: controller.gender.value,
                           decoration: InputDecoration(
                             labelText: 'Gender',
                             border: const OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.person, color: themeController.theme.primaryColor),
+                            prefixIcon: Icon(
+                              Icons.person,
+                              color: themeController.theme.primaryColor,
+                            ),
                           ),
-                          items: ['male', 'female'].map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
+                          items:
+                              ['male', 'female'].map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
                           onChanged: controller.updateGender,
                         ),
                         // if (controller.heightUnit.value == 'cm')
@@ -295,11 +410,17 @@ class CaloriesCalculatorCard extends StatelessWidget {
                           decoration: InputDecoration(
                             labelText: 'Age (years)',
                             border: const OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.cake, color: themeController.theme.primaryColor),
-                            errorText: ageController.text.isNotEmpty &&
-                                    (int.tryParse(ageController.text) ?? 0) <= 0
-                                ? 'Enter a valid age'
-                                : null,
+                            prefixIcon: Icon(
+                              Icons.cake,
+                              color: themeController.theme.primaryColor,
+                            ),
+                            errorText:
+                                ageController.text.isNotEmpty &&
+                                        (int.tryParse(ageController.text) ??
+                                                0) <=
+                                            0
+                                    ? 'Enter a valid age'
+                                    : null,
                           ),
                           keyboardType: TextInputType.number,
                           onChanged: controller.updateAge,
@@ -310,20 +431,24 @@ class CaloriesCalculatorCard extends StatelessWidget {
                           decoration: InputDecoration(
                             labelText: 'Activity Level',
                             border: const OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.directions_run, color: themeController.theme.primaryColor),
+                            prefixIcon: Icon(
+                              Icons.directions_run,
+                              color: themeController.theme.primaryColor,
+                            ),
                           ),
-                          items: [
-                            'sedentary',
-                            'lightly_active',
-                            'moderately_active',
-                            'very_active',
-                            'extremely_active'
-                          ].map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value.replaceAll('_', ' ')),
-                            );
-                          }).toList(),
+                          items:
+                              [
+                                'sedentary',
+                                'lightly_active',
+                                'moderately_active',
+                                'very_active',
+                                'extremely_active',
+                              ].map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value.replaceAll('_', ' ')),
+                                );
+                              }).toList(),
                           onChanged: controller.updateActivityLevel,
                         ),
                       ],
@@ -345,8 +470,11 @@ class CaloriesCalculatorCard extends StatelessWidget {
                           currentPage = 2;
                         });
                       } else {
-                        Get.snackbar('Error', 'Please enter a valid weight',
-                            snackPosition: SnackPosition.BOTTOM);
+                        Get.snackbar(
+                          'Error',
+                          'Please enter a valid weight',
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -367,13 +495,17 @@ class CaloriesCalculatorCard extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       if (controller.weight.value > 0 &&
-                          (controller.height.value > 0 || controller.feet.value > 0) &&
+                          (controller.height.value > 0 ||
+                              controller.feet.value > 0) &&
                           controller.age.value > 0) {
                         controller.calculate();
                         Navigator.pop(context);
                       } else {
-                        Get.snackbar('Error', 'Please enter valid weight, height, and age',
-                            snackPosition: SnackPosition.BOTTOM);
+                        Get.snackbar(
+                          'Error',
+                          'Please enter valid weight, height, and age',
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
                       }
                     },
                     style: ElevatedButton.styleFrom(

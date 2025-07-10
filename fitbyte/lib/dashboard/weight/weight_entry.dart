@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../dashboard_controller.dart';
+import 'package:fitbyte/dashboard/calculation/calculation_controller.dart';
 
 void showWeightEntryDialog(BuildContext context) {
   // Ensure DashboardController is initialized
@@ -21,9 +22,9 @@ void showWeightEntryDialog(BuildContext context) {
         title: Text(
           'Add Weight',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Colors.black87,
-                fontWeight: FontWeight.bold,
-              ),
+            color: Colors.black87,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         content: StatefulBuilder(
           builder: (context, setState) {
@@ -37,19 +38,31 @@ void showWeightEntryDialog(BuildContext context) {
                     labelStyle: TextStyle(color: Colors.black54),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                        width: 2,
+                      ),
                     ),
                     filled: true,
                     fillColor: Colors.white,
-                    errorText: weightController.text.isNotEmpty &&
-                            (double.tryParse(weightController.text.trim()) == null ||
-                                double.parse(weightController.text.trim()) <= 0)
-                        ? 'Enter a valid weight'
-                        : null,
+                    errorText:
+                        weightController.text.isNotEmpty &&
+                                (double.tryParse(
+                                          weightController.text.trim(),
+                                        ) ==
+                                        null ||
+                                    double.parse(
+                                          weightController.text.trim(),
+                                        ) <=
+                                        0)
+                            ? 'Enter a valid weight'
+                            : null,
                   ),
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   onChanged: (value) => setState(() {}),
@@ -130,6 +143,11 @@ void showWeightEntryDialog(BuildContext context) {
                   weight,
                   selectedDate.toIso8601String().split('T')[0],
                 );
+                // Update CalculatorController's weight value
+                if (Get.isRegistered<CalculatorController>()) {
+                  final calcController = Get.find<CalculatorController>();
+                  calcController.weight.value = weight;
+                }
                 Navigator.pop(context);
                 Get.snackbar(
                   'Success',
@@ -151,13 +169,12 @@ void showWeightEntryDialog(BuildContext context) {
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).primaryColor,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             ),
-            child: Text(
-              'Save',
-              style: TextStyle(fontSize: 16),
-            ),
+            child: Text('Save', style: TextStyle(fontSize: 16)),
           ),
         ],
       );

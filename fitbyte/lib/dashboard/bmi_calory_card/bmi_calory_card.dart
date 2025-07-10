@@ -5,9 +5,14 @@ import 'package:get/get.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:fitbyte/profile_screen/profile_screen.dart';
 
-class BMICalculatorCard extends StatelessWidget {
+class BMICalculatorCard extends StatefulWidget {
   const BMICalculatorCard({super.key});
 
+  @override
+  State<BMICalculatorCard> createState() => _BMICalculatorCardState();
+}
+
+class _BMICalculatorCardState extends State<BMICalculatorCard> {
   @override
   Widget build(BuildContext context) {
     final CalculatorController controller = Get.find<CalculatorController>();
@@ -196,18 +201,24 @@ class BMICalculatorCard extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       if (controller.weight.value == 0) {
-                        AlertDialog(
-                          title: const Text('Error'),
-                          content: const Text('Please enter your weight first'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('OK'),
-                            ),
-                          ],
+                        showDialog(
+                          context: Get.context!,
+                          builder:
+                              (context) => AlertDialog(
+                                title: const Text('Error'),
+                                content: const Text(
+                                  'Please enter your weight first',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
                         );
+                        return;
                       }
-
                       Get.to(() => const ProfileScreen());
                     },
                     style: ElevatedButton.styleFrom(
@@ -218,7 +229,7 @@ class BMICalculatorCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Know Your BMI'),
+                    child: const Text('Know Your Calories'),
                   ),
                 ),
               ],
