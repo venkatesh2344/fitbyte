@@ -26,7 +26,7 @@ class FitnessStatsCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Fitness Stats',
+                  'Your Fitness Stats',
                   style: themeController.theme.textTheme.titleMedium?.copyWith(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

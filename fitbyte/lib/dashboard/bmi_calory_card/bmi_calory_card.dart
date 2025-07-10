@@ -3,6 +3,7 @@ import 'package:fitbyte/theme/themecontroller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:fitbyte/profile_screen/profile_screen.dart';
 
 class BMICalculatorCard extends StatelessWidget {
   const BMICalculatorCard({super.key});
@@ -16,7 +17,9 @@ class BMICalculatorCard extends StatelessWidget {
       return IntrinsicHeight(
         child: Card(
           elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(32.0, 16.0, 32.0, 16.0),
             child: Column(
@@ -24,115 +27,144 @@ class BMICalculatorCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.health_and_safety, color: themeController.theme.primaryColor, size: 24),
+                    Icon(
+                      Icons.health_and_safety,
+                      color: themeController.theme.primaryColor,
+                      size: 24,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       'BMI Calculator',
-                      style: themeController.theme.textTheme.titleMedium?.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
+                      style: themeController.theme.textTheme.titleMedium
+                          ?.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 SizedBox(
                   height: 180,
-                  child: controller.bmi.value > 0
-                      ? SfRadialGauge(
-                          axes: <RadialAxis>[
-                            RadialAxis(
-                              minimum: 10,
-                              maximum: 40,
-                              ranges: <GaugeRange>[
-                                GaugeRange(
-                                  startValue: 10,
-                                  endValue: 18.5,
-                                  color: Colors.blue[200],
-                                  label: 'Underweight',
-                                  labelStyle: const GaugeTextStyle(fontSize: 10),
-                                  sizeUnit: GaugeSizeUnit.factor,
-                                  startWidth: 0.2,
-                                  endWidth: 0.2,
-                                ),
-                                GaugeRange(
-                                  startValue: 18.5,
-                                  endValue: 24.9,
-                                  color: Colors.green.withOpacity(0.7),
-                                  label: 'Normal',
-                                  labelStyle: const GaugeTextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                                  sizeUnit: GaugeSizeUnit.factor,
-                                  startWidth: 0.2,
-                                  endWidth: 0.2,
-                                ),
-                                GaugeRange(
-                                  startValue: 24.9,
-                                  endValue: 29.9,
-                                  color: Colors.orange,
-                                  label: 'Overweight',
-                                  labelStyle: const GaugeTextStyle(fontSize: 10),
-                                  sizeUnit: GaugeSizeUnit.factor,
-                                  startWidth: 0.2,
-                                  endWidth: 0.2,
-                                ),
-                                GaugeRange(
-                                  startValue: 29.9,
-                                  endValue: 40,
-                                  color: Colors.red,
-                                  label: 'Obese',
-                                  labelStyle: const GaugeTextStyle(fontSize: 10),
-                                  sizeUnit: GaugeSizeUnit.factor,
-                                  startWidth: 0.2,
-                                  endWidth: 0.2,
-                                ),
-                              ],
-                              pointers: [
-                                NeedlePointer(
-                                  value: controller.bmi.value,
-                                  enableAnimation: true,
-                                  animationType: AnimationType.ease,
-                                  needleColor: themeController.theme.primaryColor,
-                                ),
-                              ],
-                              annotations: [
-                                GaugeAnnotation(
-                                  widget: Text(
-                                    controller.bmi.value.toStringAsFixed(1),
-                                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  child:
+                      controller.bmi.value > 0
+                          ? SfRadialGauge(
+                            axes: <RadialAxis>[
+                              RadialAxis(
+                                minimum: 10,
+                                maximum: 40,
+                                ranges: <GaugeRange>[
+                                  GaugeRange(
+                                    startValue: 10,
+                                    endValue: 18.5,
+                                    color: Colors.blue[200],
+                                    label: 'Underweight',
+                                    labelStyle: const GaugeTextStyle(
+                                      fontSize: 10,
+                                    ),
+                                    sizeUnit: GaugeSizeUnit.factor,
+                                    startWidth: 0.2,
+                                    endWidth: 0.2,
                                   ),
-                                  angle: 90,
-                                  positionFactor: 0.5,
+                                  GaugeRange(
+                                    startValue: 18.5,
+                                    endValue: 24.9,
+                                    color: Colors.green.withOpacity(0.7),
+                                    label: 'Normal',
+                                    labelStyle: const GaugeTextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    sizeUnit: GaugeSizeUnit.factor,
+                                    startWidth: 0.2,
+                                    endWidth: 0.2,
+                                  ),
+                                  GaugeRange(
+                                    startValue: 24.9,
+                                    endValue: 29.9,
+                                    color: Colors.orange,
+                                    label: 'Overweight',
+                                    labelStyle: const GaugeTextStyle(
+                                      fontSize: 10,
+                                    ),
+                                    sizeUnit: GaugeSizeUnit.factor,
+                                    startWidth: 0.2,
+                                    endWidth: 0.2,
+                                  ),
+                                  GaugeRange(
+                                    startValue: 29.9,
+                                    endValue: 40,
+                                    color: Colors.red,
+                                    label: 'Obese',
+                                    labelStyle: const GaugeTextStyle(
+                                      fontSize: 10,
+                                    ),
+                                    sizeUnit: GaugeSizeUnit.factor,
+                                    startWidth: 0.2,
+                                    endWidth: 0.2,
+                                  ),
+                                ],
+                                pointers: [
+                                  NeedlePointer(
+                                    value: controller.bmi.value,
+                                    enableAnimation: true,
+                                    animationType: AnimationType.ease,
+                                    needleColor:
+                                        themeController.theme.primaryColor,
+                                  ),
+                                ],
+                                annotations: [
+                                  GaugeAnnotation(
+                                    widget: Text(
+                                      controller.bmi.value.toStringAsFixed(1),
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    angle: 90,
+                                    positionFactor: 0.5,
+                                  ),
+                                ],
+                                labelOffset: 15,
+                                axisLabelStyle: const GaugeTextStyle(
+                                  fontSize: 10,
                                 ),
-                              ],
-                              labelOffset: 15,
-                              axisLabelStyle: const GaugeTextStyle(fontSize: 10),
-                              showTicks: true,
-                              showLabels: true,
+                                showTicks: true,
+                                showLabels: true,
+                              ),
+                            ],
+                          )
+                          : Center(
+                            child: Text(
+                              'Calculate your BMI to see the gauge!',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: themeController.theme.primaryColor,
+                                fontStyle: FontStyle.italic,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                          ],
-                        )
-                      : Center(
-                          child: Text(
-                            'Calculate your BMI to see the gauge!',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: themeController.theme.primaryColor,
-                              fontStyle: FontStyle.italic,
-                            ),
-                            textAlign: TextAlign.center,
                           ),
-                        ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  controller.bmi.value > 0 ? 'Status: ${controller.bmiStatus.value}' : 'Typical BMI Ranges',
-                  style: const TextStyle(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.w500),
+                  controller.bmi.value > 0
+                      ? 'Status: ${controller.bmiStatus.value}'
+                      : 'Typical BMI Ranges',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w500,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  controller.bmi.value > 0 ? 'Stay on Track!' : 'Calculate your BMI to see your status!',
+                  controller.bmi.value > 0
+                      ? 'Stay on Track!'
+                      : 'Calculate your BMI to see your status!',
                   style: TextStyle(
                     fontSize: 14,
                     color: themeController.theme.primaryColor,
@@ -143,13 +175,50 @@ class BMICalculatorCard extends StatelessWidget {
                 const SizedBox(height: 16),
                 Center(
                   child: ElevatedButton(
-                    onPressed: () => _showInputDialog(context, controller, themeController),
+                    onPressed:
+                        () => _showInputDialog(
+                          context,
+                          controller,
+                          themeController,
+                        ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: themeController.theme.primaryColor,
                       foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
-                    child: const Text('Calculate BMI'),
+                    child: const Text('Calculate BMI for otheres'),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (controller.weight.value == 0) {
+                        AlertDialog(
+                          title: const Text('Error'),
+                          content: const Text('Please enter your weight first'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        );
+                      }
+
+                      Get.to(() => const ProfileScreen());
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: themeController.theme.primaryColor
+                          .withOpacity(0.8),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text('Know Your BMI'),
                   ),
                 ),
               ],
@@ -160,13 +229,18 @@ class BMICalculatorCard extends StatelessWidget {
     });
   }
 
-  void _showInputDialog(BuildContext context, CalculatorController controller, ThemeController themeController) {
+  void _showInputDialog(
+    BuildContext context,
+    CalculatorController controller,
+    ThemeController themeController,
+  ) {
     showDialog(
       context: context,
-      builder: (context) => _BMIDialog(
-        controller: controller,
-        themeController: themeController,
-      ),
+      builder:
+          (context) => _BMIDialog(
+            controller: controller,
+            themeController: themeController,
+          ),
     );
   }
 }
@@ -175,10 +249,7 @@ class _BMIDialog extends StatefulWidget {
   final CalculatorController controller;
   final ThemeController themeController;
 
-  const _BMIDialog({
-    required this.controller,
-    required this.themeController,
-  });
+  const _BMIDialog({required this.controller, required this.themeController});
 
   @override
   _BMIDialogState createState() => _BMIDialogState();
@@ -200,19 +271,19 @@ class _BMIDialogState extends State<_BMIDialog> {
     inchesController = TextEditingController();
     heightUnit = widget.controller.heightUnit.value;
 
-  //   // Initialize controllers with current values
-  //   if (widget.controller.weight.value > 0) {
-  //     weightController.text = widget.controller.weight.value.toString();
-  //   }
-  //   if (widget.controller.height.value > 0 && heightUnit == 'cm') {
-  //     heightCmController.text = widget.controller.height.value.toString();
-  //   }
-  //   if (widget.controller.feet.value > 0 && heightUnit == 'ft/in') {
-  //     feetController.text = widget.controller.feet.value.toString();
-  //   }
-  //   if (widget.controller.inches.value > 0 && heightUnit == 'ft/in') {
-  //     inchesController.text = widget.controller.inches.value.toString();
-  //   }
+    //   // Initialize controllers with current values
+    //   if (widget.controller.weight.value > 0) {
+    //     weightController.text = widget.controller.weight.value.toString();
+    //   }
+    //   if (widget.controller.height.value > 0 && heightUnit == 'cm') {
+    //     heightCmController.text = widget.controller.height.value.toString();
+    //   }
+    //   if (widget.controller.feet.value > 0 && heightUnit == 'ft/in') {
+    //     feetController.text = widget.controller.feet.value.toString();
+    //   }
+    //   if (widget.controller.inches.value > 0 && heightUnit == 'ft/in') {
+    //     inchesController.text = widget.controller.inches.value.toString();
+    //   }
   }
 
   @override
@@ -240,11 +311,15 @@ class _BMIDialogState extends State<_BMIDialog> {
               decoration: InputDecoration(
                 labelText: 'Weight (kg)',
                 border: const OutlineInputBorder(),
-                prefixIcon: Icon(Icons.fitness_center, color: widget.themeController.theme.primaryColor),
-                errorText: weightController.text.isNotEmpty &&
-                        (double.tryParse(weightController.text) ?? 0.0) <= 0
-                    ? 'Enter a valid weight'
-                    : null,
+                prefixIcon: Icon(
+                  Icons.fitness_center,
+                  color: widget.themeController.theme.primaryColor,
+                ),
+                errorText:
+                    weightController.text.isNotEmpty &&
+                            (double.tryParse(weightController.text) ?? 0.0) <= 0
+                        ? 'Enter a valid weight'
+                        : null,
               ),
               keyboardType: TextInputType.number,
               onChanged: (value) {
@@ -258,14 +333,20 @@ class _BMIDialogState extends State<_BMIDialog> {
               decoration: InputDecoration(
                 labelText: 'Height Unit',
                 border: const OutlineInputBorder(),
-                prefixIcon: Icon(Icons.height, color: widget.themeController.theme.primaryColor),
+                prefixIcon: Icon(
+                  Icons.height,
+                  color: widget.themeController.theme.primaryColor,
+                ),
               ),
-              items: ['cm', 'ft/in'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value == 'cm' ? 'Centimeters' : 'Feet/Inches'),
-                );
-              }).toList(),
+              items:
+                  ['cm', 'ft/in'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value == 'cm' ? 'Centimeters' : 'Feet/Inches',
+                      ),
+                    );
+                  }).toList(),
               onChanged: (value) {
                 if (value != null && mounted) {
                   setState(() {
@@ -286,11 +367,17 @@ class _BMIDialogState extends State<_BMIDialog> {
                 decoration: InputDecoration(
                   labelText: 'Height (cm)',
                   border: const OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.height, color: widget.themeController.theme.primaryColor),
-                  errorText: heightCmController.text.isNotEmpty &&
-                          (double.tryParse(heightCmController.text) ?? 0.0) <= 0
-                      ? 'Enter a valid height'
-                      : null,
+                  prefixIcon: Icon(
+                    Icons.height,
+                    color: widget.themeController.theme.primaryColor,
+                  ),
+                  errorText:
+                      heightCmController.text.isNotEmpty &&
+                              (double.tryParse(heightCmController.text) ??
+                                      0.0) <=
+                                  0
+                          ? 'Enter a valid height'
+                          : null,
                 ),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
@@ -307,11 +394,16 @@ class _BMIDialogState extends State<_BMIDialog> {
                       decoration: InputDecoration(
                         labelText: 'Feet',
                         border: const OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.height, color: widget.themeController.theme.primaryColor),
-                        errorText: feetController.text.isNotEmpty &&
-                                (int.tryParse(feetController.text) ?? 0) <= 0
-                            ? 'Enter valid feet'
-                            : null,
+                        prefixIcon: Icon(
+                          Icons.height,
+                          color: widget.themeController.theme.primaryColor,
+                        ),
+                        errorText:
+                            feetController.text.isNotEmpty &&
+                                    (int.tryParse(feetController.text) ?? 0) <=
+                                        0
+                                ? 'Enter valid feet'
+                                : null,
                       ),
                       keyboardType: TextInputType.number,
                       onChanged: (value) {
@@ -327,11 +419,17 @@ class _BMIDialogState extends State<_BMIDialog> {
                       decoration: InputDecoration(
                         labelText: 'Inches',
                         border: const OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.height, color: widget.themeController.theme.primaryColor),
-                        errorText: inchesController.text.isNotEmpty &&
-                                (double.tryParse(inchesController.text) ?? 0.0) < 0
-                            ? 'Enter valid inches'
-                            : null,
+                        prefixIcon: Icon(
+                          Icons.height,
+                          color: widget.themeController.theme.primaryColor,
+                        ),
+                        errorText:
+                            inchesController.text.isNotEmpty &&
+                                    (double.tryParse(inchesController.text) ??
+                                            0.0) <
+                                        0
+                                ? 'Enter valid inches'
+                                : null,
                       ),
                       keyboardType: TextInputType.number,
                       onChanged: (value) {
@@ -353,12 +451,16 @@ class _BMIDialogState extends State<_BMIDialog> {
         ElevatedButton(
           onPressed: () {
             if ((widget.controller.weight.value > 0) &&
-                (widget.controller.height.value > 0 || (widget.controller.feet.value > 0))) {
+                (widget.controller.height.value > 0 ||
+                    (widget.controller.feet.value > 0))) {
               widget.controller.calculate();
               Navigator.pop(context);
             } else {
-              Get.snackbar('Error', 'Please enter valid weight and height',
-                  snackPosition: SnackPosition.BOTTOM);
+              Get.snackbar(
+                'Error',
+                'Please enter valid weight and height',
+                snackPosition: SnackPosition.BOTTOM,
+              );
             }
           },
           style: ElevatedButton.styleFrom(

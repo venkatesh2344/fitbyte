@@ -87,11 +87,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 // User Details Card
+                const FitnessStatsCard(),
+                const SizedBox(height: 16),
                 const UserDetailsCard(),
                 const SizedBox(height: 16),
                 // Fitness Stats Card
-                const FitnessStatsCard(),
-                const SizedBox(height: 16),
+
                 // Clear Data Button
                 const ClearDataButton(),
                 const SizedBox(height: 16),

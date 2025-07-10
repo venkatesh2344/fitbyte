@@ -2,6 +2,7 @@ import 'package:fitbyte/dashboard/calculation/calculation_controller.dart';
 import 'package:fitbyte/theme/themecontroller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fitbyte/profile_screen/profile_screen.dart';
 
 class CaloriesCalculatorCard extends StatelessWidget {
   const CaloriesCalculatorCard({super.key});
@@ -84,9 +85,24 @@ class CaloriesCalculatorCard extends StatelessWidget {
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     ),
-                    child: const Text('Calculate Calories'),
+                    child: const Text('Calculate Calories for otheres'),
                   ),
                 ),
+                  const SizedBox(height: 8),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () => Get.to(() => const ProfileScreen()),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: themeController.theme.primaryColor
+                            .withOpacity(0.8),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text('Know Your Calories'),
+                    ),
+                  ),
               ],
             ),
           ),
