@@ -26,7 +26,7 @@ class DashboardHeader extends StatelessWidget {
           children: [
             const Spacer(),
             Text(
-              'FitByte Dashboard',
+              'FitByte',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

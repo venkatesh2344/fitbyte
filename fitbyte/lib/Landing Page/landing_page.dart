@@ -11,105 +11,209 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            flex: 4, // 4/6 of the screen
-            child: Container(
-              color: Theme.of(context).colorScheme.secondary, // Fallback to secondary color (blue)
-              child: Image.asset(
-                'assets/landing_image.jpg', // Replace with your image path
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Theme.of(context).colorScheme.secondary, // Blue if image fails
-                    child: const Center(child: Text('Image not found')),
-                  );
-                },
+          // Background Gradient
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                  Theme.of(context).colorScheme.secondary.withOpacity(0.6),
+                ],
               ),
             ),
           ),
-          Expanded(
-            flex: 2, // Remaining 2/6 of the screen
-            child: Container(
-              color:  Colors.pink[100],
-              child: Obx(
-                () => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          Column(
+            children: [
+              // Image Section
+              Expanded(
+                flex: 3,
+                child: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    Expanded(
-                      child: PageView(
-                        controller: controller.pageController,
-                        onPageChanged: (index) {
-                          controller.currentPage.value = index;
-                        },
-                        children: [
-                          SingleChildScrollView(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                'Welcome to FitByte\nStart your fitness journey with us by tracking your weight, calories, and BMI. Get personalized insights to achieve your goals!',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.white, fontSize: 18),
-                              ),
-                            ),
+                    Image.asset(
+                      'assets/landing_image.jpg',
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                        child: const Center(
+                          child: Text(
+                            'Image not found',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
-                          SingleChildScrollView(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                'Track your progress\nLog your daily meals and workouts to see how your body transforms over time with FitByte’s powerful tools!',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.white, fontSize: 18),
-                              ),
-                            ),
-                          ),
-                          SingleChildScrollView(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                'Join the community\nConnect with other fitness enthusiasts and share your journey with FitByte’s social features!',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.white, fontSize: 18),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(3, (index) {
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                          width: 8.0,
-                          height: 8.0,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: controller.currentPage.value == index ? Colors.white : Colors.white54,
-                          ),
-                        );
-                      }),
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withOpacity(0.3),
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (controller.currentPage.value < 2) {
-                            controller.pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                          } else {
-                            Get.to(() => OnboardingScreen());
-                          }
-                        },
-                        child: Text(controller.currentPage.value < 2 ? 'Next' : 'Get Started'),
+                    SafeArea(
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            'FitByte',
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  color: Colors.white,
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  shadows: [
+                                    Shadow(
+                                      blurRadius: 4,
+                                      color: Colors.black.withOpacity(0.5),
+                                      offset: const Offset(2, 2),
+                                    ),
+                                  ],
+                                ),
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
+              // Content Section
+              Expanded(
+                flex: 2,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
+                    ),
+                  ),
+                  child: Obx(
+                    () => Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: PageView(
+                            controller: controller.pageController,
+                            onPageChanged: (index) {
+                              controller.currentPage.value = index;
+                            },
+                            children: [
+                              _buildPageContent(
+                                context,
+                                'Welcome to FitByte',
+                                'Start your fitness journey with us by tracking your weight, calories, and BMI. Get personalized insights to achieve your goals!',
+                              ),
+                              _buildPageContent(
+                                context,
+                                'Track Your Progress',
+                                'Log your daily meals and workouts to see how your body transforms over time with FitByte’s powerful tools!',
+                              ),
+                              _buildPageContent(
+                                context,
+                                'Join the Community',
+                                'Connect with other fitness enthusiasts and share your journey with FitByte’s social features!',
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Page Indicators
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(3, (index) {
+                              return AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                margin: const EdgeInsets.symmetric(horizontal: 6.0),
+                                width: controller.currentPage.value == index ? 12.0 : 8.0,
+                                height: 8.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: controller.currentPage.value == index
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPageContent(BuildContext context, String title, String description) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              description,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                    fontSize: 16,
+                  ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                if (controller.currentPage.value < 2) {
+                  controller.pageController.nextPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                } else {
+                  Get.to(() => const OnboardingScreen());
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 48),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 4,
+              ),
+              child: Text(
+                controller.currentPage.value < 2 ? 'Next' : 'Get Started',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

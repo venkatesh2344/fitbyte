@@ -19,25 +19,62 @@ class ThemeController extends GetxController {
   }
 
   ThemeData get theme => ThemeData(
-        primaryColor: gender.value == 'female' ? Colors.pink[100] : Colors.blue[100],
+        primaryColor: gender.value == 'female' ? const Color(0xFFFF6B6B) : const Color(0xFF26A69A),
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: gender.value == 'female' ? Colors.pink[100] : Colors.blue[100],
-          secondary: gender.value == 'female' ? Colors.pink[200] : Colors.blue[200],
-          surface: Colors.white,
+          primary: gender.value == 'female' ? const Color(0xFFFF6B6B) : const Color(0xFF26A69A),
+          secondary: gender.value == 'female' ? const Color(0xFFFF8787) : const Color(0xFF4DB6AC),
+          surface: const Color(0xFFFAFAFA),
+          onPrimary: Colors.white,
+          onSecondary: Colors.white,
+          onSurface: const Color(0xFF212121),
         ),
-        scaffoldBackgroundColor: Colors.white,
+        scaffoldBackgroundColor: const Color(0xFFFAFAFA),
         textTheme: const TextTheme(
-          bodyMedium: TextStyle(color: Colors.black87),
+          bodyMedium: TextStyle(color: Color(0xFF212121)),
           titleLarge: TextStyle(
-            color: Colors.black87,
+            color: Color(0xFF212121),
             fontWeight: FontWeight.bold,
           ),
+          titleMedium: TextStyle(
+            color: Color(0xFF212121),
+            fontWeight: FontWeight.w600,
+          ),
+          bodySmall: TextStyle(color: Color(0xFF757575)),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: gender.value == 'female' ? Colors.pink[200] : Colors.blue[200],
+            backgroundColor: gender.value == 'female' ? const Color(0xFFFF8787) : const Color(0xFF4DB6AC),
             foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            textStyle: const TextStyle(fontWeight: FontWeight.w600),
           ),
+        ),
+        iconTheme: IconThemeData(
+          color: gender.value == 'female' ? const Color(0xFFFF6B6B) : const Color(0xFF26A69A),
+        ),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: const Color(0xFFFAFAFA),
+          selectedItemColor: gender.value == 'female' ? const Color(0xFFFF6B6B) : const Color(0xFF26A69A),
+          unselectedItemColor: const Color(0xFF757575),
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
+          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
+        ),
+        cardTheme: CardThemeData(
+          color: Colors.white,
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: gender.value == 'female' ? const Color(0xFFFF6B6B) : const Color(0xFF26A69A),
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          labelStyle: const TextStyle(color: Color(0xFF757575)),
+          prefixIconColor: gender.value == 'female' ? const Color(0xFFFF6B6B) : const Color(0xFF26A69A),
         ),
       );
 
@@ -48,9 +85,8 @@ class ThemeController extends GetxController {
     required int age,
     required String gender,
     required double height,
-    required String activityLevel, 
-        required String heightUnit,
-
+    required String activityLevel,
+    required String heightUnit,
   }) async {
     try {
       this.gender.value = gender;
@@ -62,8 +98,7 @@ class ThemeController extends GetxController {
         gender: gender,
         height: height,
         activityLevel: activityLevel,
-              heightUnit: heightUnit,
-
+        heightUnit: heightUnit,
       );
       Get.changeTheme(theme); // Update theme dynamically
     } catch (e) {
